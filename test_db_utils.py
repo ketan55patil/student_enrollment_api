@@ -51,3 +51,17 @@ class TestDBUtils:
         cnx = db_utils.db_connect()
         is_update = db_utils.db_update_student(cnx, student_id=4, student_class='1 C')
         assert is_update
+
+    # #####################################
+    # db_delete_student
+    # #####################################
+
+    def test_db_delete_student_success(self):
+        cnx = db_utils.db_connect()
+        is_delete = db_utils.db_delete_student(cnx, student_id=4)
+        assert is_delete
+
+    def test_db_delete_student_missing_id(self):
+        cnx = db_utils.db_connect()
+        is_delete = db_utils.db_delete_student(cnx)
+        assert not is_delete

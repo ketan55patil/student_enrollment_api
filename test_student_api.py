@@ -98,3 +98,14 @@ class TestStudentAPI:
         assert response.status_code == 200
 
     # TODO add more cases for other combinations
+
+    # #####################################
+    # Delete Student Record Tests
+    # #####################################
+    def test_delete_student_by_id_200(self):
+        response = requests.delete(base_url, {"id": 3})
+        assert response.status_code == 200
+
+    def test_delete_student_by_invalid_id_400(self):
+        response = requests.delete(base_url, {"id": 9999})
+        assert response.status_code == 400

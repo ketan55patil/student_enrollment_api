@@ -31,6 +31,11 @@ student_put_args.add_argument("class", type=str,
 student_put_args.add_argument("nationality", type=str,
                               help="nationality should be a string")
 
+# Request parser for delete
+delete_student_args = reqparse.RequestParser()
+delete_student_args.add_argument("id", type=int,
+                                 help="Required field id is missing or should be an int", required=True)
+
 
 class Student(Resource):
 
@@ -83,6 +88,17 @@ class Student(Resource):
                                          nationality=nationality)
 
         if upd:
+            return student_id, 200
+        else:
+            return student_id, 400
+
+    def delete(self, student_id):
+        # Use this for delete student record
+        # Delete if id is unique
+        # if Successful return "Success with appropriate http response code"
+        cnx = db_utils.db_connect()
+        is_delete = db_utils.db_delete_student(cnx, student_id=student_id)
+        if is_delete:
             return student_id, 200
         else:
             return student_id, 400

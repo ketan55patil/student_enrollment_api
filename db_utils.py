@@ -101,6 +101,42 @@ def db_update_student(cnx, student_id=None, first_name=None, last_name=None,
     return True
 
 
+def db_delete_student(cnx, student_id=None, db_table_name="student_tbl"):
+    sql_delete = f"DELETE FROM {db_table_name} " \
+                 f"WHERE id = {student_id}"
+
+    logging.debug(f'Sql delete query is:  {sql_delete}...')
+
+    cursor = cnx.cursor()
+
+    logging.debug(f'Attempting to delete record for student_id {student_id}...')
+
+    try:
+        cursor.execute(sql_delete)
+    except mysql.connector.Error as err:
+        logging.error(err)
+        return False
+
+    logging.debug('Committing update...')
+    cnx.commit()
+
+    if cursor.rowcount == 1:
+        logging.debug("Deleted exactly 1 record")
+        logging.debug('Closing cursor')
+        cursor.close()
+        return True
+
+    if cursor.rowcount < 0:
+        logging.error("No records found to delete!")
+
+    if cursor.rowcount > 1:
+        logging.error("Deleted more than 1 records!")
+
+    logging.debug('Closing cursor')
+    cursor.close()
+    return False
+
+
 def db_close_cnx(cnx):
     logging.debug('Closing DB connection')
     cnx.close()
