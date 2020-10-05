@@ -32,3 +32,22 @@ class TestDBUtils:
         cnx = db_utils.db_connect()
         is_insert = db_utils.db_insert_student_details(cnx)
         assert not is_insert
+
+    # #####################################
+    # db_update_student
+    # #####################################
+
+    def test_db_update_student_missing_id(self):
+        cnx = db_utils.db_connect()
+        is_update = db_utils.db_update_student(cnx, student_class='1 C')
+        assert not is_update
+
+    def test_db_update_student_missing_update_data(self):
+        cnx = db_utils.db_connect()
+        is_update = db_utils.db_update_student(cnx, student_id=4)
+        assert not is_update
+
+    def test_db_update_student_success(self):
+        cnx = db_utils.db_connect()
+        is_update = db_utils.db_update_student(cnx, student_id=4, student_class='1 C')
+        assert is_update

@@ -75,3 +75,26 @@ class TestStudentAPI:
         # print(response.json())
         assert response.status_code == 400
 
+    # #####################################
+    # Update Student Record Tests
+    # #####################################
+
+    def test_put_update_student_no_id_400(self):
+        response = requests.put(base_url, {"class": "5 C"})
+        assert response.status_code == 400
+
+    def test_put_update_student_invalid_id_400(self):
+        response = requests.put(base_url, {"id": 9999,
+                                           "class": "5 C"})
+        assert response.status_code == 400
+
+    def test_put_update_student_only_id_400(self):
+        response = requests.put(base_url, {"id": 3})
+        assert response.status_code == 400
+
+    def test_put_update_student_by_id_200(self):
+        response = requests.put(base_url, {"id": 3,
+                                           "class": "5 C"})
+        assert response.status_code == 200
+
+    # TODO add more cases for other combinations
