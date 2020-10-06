@@ -101,6 +101,64 @@ def db_update_student(cnx, student_id=None, first_name=None, last_name=None,
     return True
 
 
+def db_fetch_students(cnx, student_id=None, student_class=None, db_table_name="student_tbl"):
+    cursor = cnx.cursor()
+
+    logging.debug(f"student_id is {student_id} and "
+                  f"student_class is {student_class}")
+
+    # TODO: Limit the number of records being fetched form the db at a time
+    where_list = []
+    if student_class is not None:
+        where_list.append(f"class='{student_class}'")
+    if student_id is not None:
+        where_list.append(f"id={student_id}")
+
+    if not where_list:
+        logging.error("student id or class is required")
+        return False
+
+    where_string = ' and '.join(where_list)
+
+    sql_select = f"SELECT id, firstName, lastName, class, nationality " \
+                 f"FROM {db_table_name} " \
+                 f"WHERE {where_string}"
+
+    logging.debug(f"query = {sql_select}")
+    cursor.execute(sql_select)
+    rows = cursor.fetchall()
+    students_list = []
+
+    # check if id is valid
+
+    logging.debug(f"cursor.rowcount is {cursor.rowcount}")
+
+    if student_id is not None and student_id is not None and len(rows) == 0:
+        logging.error(f"No records found for id {student_id} and class {student_class}!")
+        return False
+
+    if student_id is not None and len(rows) == 0:
+        logging.error(f"No records found for id {student_id}!")
+        return False
+    if student_class is not None and len(rows) == 0:
+        logging.error(f"No records found for class {student_class}!")
+        return False
+
+    for col in rows:
+        student_dict = {"id": col[0],
+                        "first_name": col[1],
+                        "lastName": col[2],
+                        "class": col[3],
+                        "nationality": col[4]}
+
+        students_list.append(student_dict)
+
+    logging.debug(f"Students list is: {students_list}")
+    logging.debug('Closing cursor')
+    cursor.close()
+    return students_list
+
+
 def db_delete_student(cnx, student_id=None, db_table_name="student_tbl"):
     sql_delete = f"DELETE FROM {db_table_name} " \
                  f"WHERE id = {student_id}"
@@ -126,7 +184,7 @@ def db_delete_student(cnx, student_id=None, db_table_name="student_tbl"):
         cursor.close()
         return True
 
-    if cursor.rowcount < 0:
+    if cursor.rowcount < 1:
         logging.error("No records found to delete!")
 
     if cursor.rowcount > 1:
