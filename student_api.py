@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api, Resource, reqparse, abort
 import db_utils.db_utils as dbu
 
 # Create new flask app and api
@@ -56,25 +56,21 @@ class Student(Resource):
         student_class = student_details["class"]
         nationality = student_details["nationality"]
 
-        # Check if id is unique
-        # if not is_unique_id(student_id):
-        #     logging.error(f"id {student_id} is not unique!!!!")
-        #     return "Error Id already exists!", 400
-
         # TODO: Validate Class and Nationality
-        # If class and nationality is not valid
-        #   return http 400
 
         # Add data to db
         cnx = dbu.db_connect()
         if cnx:
+            is_exists_student = dbu.db_fetch_students(cnx, student_id=student_id)
+            if is_exists_student:
+                abort(409, message=f"Student with id {student_id} already exists!")
+
             ins = dbu.db_insert_student_details(cnx, student_id, first_name, last_name,
                                                 student_class, nationality)
             dbu.db_close_cnx(cnx)
             if ins:
-                # if Successful return "Success with http 201 (created)"
                 return student_details, 201
-        return student_details, 400
+        abort(400, message="Student creation failed. Please provide valid data.")
 
     def put(self):
         # Use this for update student record
@@ -90,16 +86,19 @@ class Student(Resource):
         cnx = dbu.db_connect()
 
         is_valid_id = dbu.db_fetch_students(cnx, student_id=student_id)
-        upd = None
 
-        if is_valid_id:
-            upd = dbu.db_update_student(cnx, student_id=student_id, first_name=first_name,
-                                        last_name=last_name, student_class=student_class,
-                                        nationality=nationality)
+        if not is_valid_id:
+            dbu.db_close_cnx(cnx)
+            abort(404, message=f"Student with id {student_id} does not exist. Unable to update.")
+
+        upd = dbu.db_update_student(cnx, student_id=student_id, first_name=first_name,
+                                    last_name=last_name, student_class=student_class,
+                                    nationality=nationality)
+        dbu.db_close_cnx(cnx)
         if upd:
             return f"Successfully updated record for student with id {student_id}", 200
         else:
-            return f"Not able to update student with id {student_id}", 400
+            abort(400, message=f"Not able to update student with id {student_id}")
 
 
 class FetchStudents(Resource):
@@ -111,23 +110,13 @@ class FetchStudents(Resource):
         student_id = fetch_students["id"]
         student_class = fetch_students["class"]
 
-        # if student_id:
-        #     cnx = dbu.db_connect()
-        #     student_json = dbu.db_fetch_students(cnx, student_id=student_id)
-        #     # print(f"student_json is {student_json}")
-        # elif student_class:
-        #     # TODO: update the query to return records by class
-        #     cnx = dbu.db_connect()
-        #     student_json = dbu.db_fetch_students(cnx, student_class=student_class)
-        #     # print(f"student_json is {student_json}")
-        # # else:
-        # #     return "valid id or class is required", 400
         cnx = dbu.db_connect()
         student_json = dbu.db_fetch_students(cnx, student_id=student_id, student_class=student_class)
 
-        # TODO: update to return the correct response
+        dbu.db_close_cnx(cnx)
+
         if not student_json:
-            return "valid id and/or class is required", 400
+            abort(404, message="valid id and/or class is required")
         else:
             return student_json, 200
 
@@ -136,15 +125,25 @@ class DeleteStudent(Resource):
     def delete(self, student_id):
         # Use this for delete student record
         # Delete if id is unique
-        # if Successful return "Success with appropriate http response code"
-        # student_details = delete_student_args.parse_args()
-        # student_id = student_details["id"]
         cnx = dbu.db_connect()
-        is_delete = dbu.db_delete_student(cnx, student_id=student_id)
-        if is_delete:
-            return f"Successfully deleted record for student with id {student_id}", 200
+
+        # Check if student_id exists and is unique
+        student_list = dbu.db_fetch_students(cnx, student_id=student_id)
+
+        if student_list:
+            if len(student_list) > 1:
+                dbu.db_close_cnx(cnx)
+                abort(400, message=f"Student id {student_id} is not unique. Unable to delete.")
         else:
-            return f"Not able to delete student with id {student_id}", 400
+            dbu.db_close_cnx(cnx)
+            abort(404, message=f"Student with id {student_id} does not exist. Unable to delete.")
+
+        is_delete = dbu.db_delete_student(cnx, student_id=student_id)
+        dbu.db_close_cnx(cnx)
+        if is_delete:
+            return f"Successfully deleted record for student with id {student_id}", 204
+        else:
+            abort(400, message=f"Not able to delete student with id {student_id}")
 
 
 api.add_resource(DeleteStudent, "/<int:student_id>")

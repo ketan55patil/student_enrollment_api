@@ -17,7 +17,7 @@ Feature: Fetch students by id
     When the student API is queried with id
       | id            |
       | <student_ids> |
-    Then the response status code is "400"
+    Then the response status code is "404"
 
     Examples: Invalid
       | student_ids |

@@ -17,7 +17,7 @@ Feature: Fetch students by class
     When the student API is queried with class
       | class     |
       | <classes> |
-    Then the response status code is "400"
+    Then the response status code is "404"
 
     Examples: Invalid
       | classes |

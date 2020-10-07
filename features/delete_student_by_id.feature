@@ -7,7 +7,7 @@ Feature: Delete students by id
     When the delete student API is queried with id
       | id            |
       | <student_ids> |
-    Then the response status code is "200"
+    Then the response status code is "204"
 
     Examples: Valid
       | student_ids |
@@ -16,7 +16,7 @@ Feature: Delete students by id
     When the delete student API is queried with id
       | id            |
       | <student_ids> |
-    Then the response status code is "400"
+    Then the response status code is "404"
 
     Examples: Invalid
       | student_ids |

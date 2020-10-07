@@ -17,7 +17,7 @@ Feature: Create students
     When the student API is queried with post data
       | class     | id    | firstName     | lastName      | nationality     |
       | <classes> | <ids> | <firstNames>  | <lastNames>  | <nationalities> |
-    Then the response status code is "400"
+    Then the response status code is "409"
 
     Examples: Invalid
       | classes | ids | firstNames  | lastNames  | nationalities  |

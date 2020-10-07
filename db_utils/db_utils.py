@@ -5,8 +5,15 @@ import logging.config
 
 logging.config.fileConfig('logging.conf')
 
+# TODO: Move this to a config file
+DB_HOST = "127.0.0.1"
+DB_USER = "root"
+DB_PASS = "1234"
+DB_NAME = "student_db"
+DB_TABLE_NAME = 'student_tbl'
 
-def db_connect(db_host="127.0.0.1", db_user="root", db_pass="1234", db_name="student_db"):
+
+def db_connect(db_host=DB_HOST, db_user=DB_USER, db_pass=DB_PASS, db_name=DB_NAME):
 
     try:
         cnx = mysql.connector.connect(user=db_user, password=db_pass,
@@ -27,7 +34,7 @@ def db_connect(db_host="127.0.0.1", db_user="root", db_pass="1234", db_name="stu
 
 
 def db_insert_student_details(cnx, student_id=None, first_name=None, last_name=None,
-                              student_class=None, nationality=None, db_table_name='student_tbl'):
+                              student_class=None, nationality=None, db_table_name=DB_TABLE_NAME):
 
     sql_insert = f"INSERT INTO {db_table_name} " \
                  f"(id, firstName, lastName, class, nationality) \
@@ -53,10 +60,7 @@ def db_insert_student_details(cnx, student_id=None, first_name=None, last_name=N
 
 
 def db_update_student(cnx, student_id=None, first_name=None, last_name=None,
-                      student_class=None, nationality=None, db_table_name='student_tbl'):
-
-    # TODO: Check if student id is valid
-
+                      student_class=None, nationality=None, db_table_name=DB_TABLE_NAME):
     set_string_list = []
     if first_name is not None:
         set_string_list.append(f"firstName = '{first_name}'")
@@ -101,7 +105,7 @@ def db_update_student(cnx, student_id=None, first_name=None, last_name=None,
     return True
 
 
-def db_fetch_students(cnx, student_id=None, student_class=None, db_table_name="student_tbl"):
+def db_fetch_students(cnx, student_id=None, student_class=None, db_table_name=DB_TABLE_NAME):
     cursor = cnx.cursor()
 
     logging.debug(f"student_id is {student_id} and "
@@ -128,8 +132,6 @@ def db_fetch_students(cnx, student_id=None, student_class=None, db_table_name="s
     cursor.execute(sql_select)
     rows = cursor.fetchall()
     students_list = []
-
-    # check if id is valid
 
     logging.debug(f"cursor.rowcount is {cursor.rowcount}")
 
@@ -159,7 +161,7 @@ def db_fetch_students(cnx, student_id=None, student_class=None, db_table_name="s
     return students_list
 
 
-def db_delete_student(cnx, student_id=None, db_table_name="student_tbl"):
+def db_delete_student(cnx, student_id=None, db_table_name=DB_TABLE_NAME):
     sql_delete = f"DELETE FROM {db_table_name} " \
                  f"WHERE id = {student_id}"
 
