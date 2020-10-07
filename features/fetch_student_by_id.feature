@@ -12,8 +12,7 @@ Feature: Fetch students by id
     Examples: Valid
       | student_ids |
       | 1           |
-      | 2           |
-      | 9           |
+
   Scenario Outline: Basic fetch student by invalid id
     When the student API is queried with id
       | id            |
@@ -23,5 +22,3 @@ Feature: Fetch students by id
     Examples: Invalid
       | student_ids |
       | 999         |
-      | 998         |
-      | 997         |

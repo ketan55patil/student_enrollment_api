@@ -12,7 +12,6 @@ Feature: Delete students by id
     Examples: Valid
       | student_ids |
       | 890         |
-      | 890         |
   Scenario Outline: Basic delete student by invalid id
     When the delete student API is queried with id
       | id            |
@@ -22,5 +21,3 @@ Feature: Delete students by id
     Examples: Invalid
       | student_ids |
       | 999         |
-      | 998         |
-      | 997         |

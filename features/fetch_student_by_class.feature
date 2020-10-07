@@ -12,7 +12,6 @@ Feature: Fetch students by class
     Examples: Valid
       | classes |
       | 4 C     |
-      | 9 Z     |
 
   Scenario Outline: Basic fetch student by invalid class
     When the student API is queried with class
@@ -23,4 +22,3 @@ Feature: Fetch students by class
     Examples: Invalid
       | classes |
       | 9999 C  |
-      | 9999 Z  |

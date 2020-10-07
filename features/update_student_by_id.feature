@@ -11,7 +11,6 @@ Feature: Update students by id
 
     Examples: Valid
       | student_ids | classes |
-      | 890         | 5 C     |
       | 891         | 9 Y     |
 
   Scenario Outline: Basic update student by invalid id
@@ -23,4 +22,3 @@ Feature: Update students by id
     Examples: Invalid
       | student_ids | classes |
       | 990         | 5 C     |
-      | 991         | 9 Y     |
