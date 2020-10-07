@@ -4,10 +4,10 @@ import requests
 # from .student_api import FetchStudents
 # from .student_api import FetchStudents
 
-import logging
-import logging.config
-
-logging.config.fileConfig('logging.conf')
+# import logging
+# import logging.config
+#
+# logging.config.fileConfig('logging.conf')
 
 base_url = "http://127.0.0.1:5000/"
 
@@ -18,7 +18,7 @@ class TestStudentAPI:
     # #####################################
 
     def test_post_create_student_id_201(self):
-        logging.debug("test_post_create_student_id_201")
+        # logging.debug("test_post_create_student_id_201")
         response = requests.post(base_url, {"id": 3,
                                             "firstName": "Steve",
                                             "lastName": "Smith",
@@ -28,7 +28,7 @@ class TestStudentAPI:
         assert response.status_code == 201
 
     def test_post_create_student_existing_id_400(self):
-        logging.debug("test_post_create_student_existing_id_400")
+        # logging.debug("test_post_create_student_existing_id_400")
         response = requests.post(base_url, {"id": 3,
                                             "firstName": "Steve",
                                             "lastName": "Smith",

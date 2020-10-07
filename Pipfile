@@ -12,6 +12,7 @@ behave = "*"
 [packages]
 flask = "*"
 flask-restful = "*"
+mysql-connector-python = "*"
 
 [requires]
 python_version = "3.8"
