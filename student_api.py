@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
-import db_utils as dbu
+import db_utils.db_utils as dbu
 
+# Create new flask app and api
 app = Flask(__name__)
 api = Api(app)
 
