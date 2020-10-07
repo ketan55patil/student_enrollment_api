@@ -59,16 +59,16 @@ def db_update_student(cnx, student_id=None, first_name=None, last_name=None,
 
     set_string_list = []
     if first_name is not None:
-        set_string_list = [f"first_name = '{first_name}'"]
+        set_string_list.append(f"firstName = '{first_name}'")
 
     if last_name is not None:
-        set_string_list = [f"last_name = '{last_name}'"]
+        set_string_list.append(f"lastName = '{last_name}'")
 
     if student_class is not None:
-        set_string_list = [f"class = '{student_class}'"]
+        set_string_list.append(f"class = '{student_class}'")
 
     if nationality is not None:
-        set_string_list = [f"nationality = '{nationality}'"]
+        set_string_list.append(f"nationality = '{nationality}'")
 
     logging.debug(f"set_string_dict is: {set_string_list}")
     if not set_string_list:
