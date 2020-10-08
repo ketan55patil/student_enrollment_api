@@ -151,5 +151,5 @@ api.add_resource(Student, "/")
 api.add_resource(FetchStudents, "/fetchStudents")
 
 if __name__ == "__main__":
-    # TODO: Change this false for production
-    app.run(debug=True)
+    # Keep debug=False for production
+    app.run(debug=False)
