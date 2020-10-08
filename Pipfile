@@ -4,13 +4,15 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+pytest-cov = "*"
+requests = "*"
+behave = "*"
 
 [packages]
 flask = "*"
 flask-restful = "*"
-pytest = "*"
-pytest-cov = "*"
-requests = "*"
+mysql-connector-python = "*"
 
 [requires]
 python_version = "3.8"
